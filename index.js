@@ -4,7 +4,7 @@ const urlRoute = require("./router/url");
 const URL = require("./models/url");
 const staticRauter = require("./router/saticRauter");
 const userRoute = require("./router/user");
-const { restrictToLogedIn } = require("./middleware/auth");
+const { checkForAuthetication, restrictionto } = require("./middleware/auth");
 const { connectToMongo } = require("./connection");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -18,8 +18,9 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(checkForAuthetication);
 
-app.use("/url", restrictToLogedIn, urlRoute);
+app.use("/url", restrictionto(["NORMAL"]), urlRoute);
 app.use("/", staticRauter);
 app.use("/user", userRoute);
 

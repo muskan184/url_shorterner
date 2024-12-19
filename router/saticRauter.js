@@ -1,11 +1,14 @@
 const express = require("express");
 const URL = require("../models/url");
+const { restrictionto } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  const allUrls = URL.find({});
-  return res.render("home");
+router.get("/", restrictionto(["NORMAL"]), async (req, res) => {
+  const allUrls = await URL.find({ createdBy: req.user._id });
+  return res.render("home", {
+    URLS: allUrls,
+  });
 });
 
 router.get("/signup", (req, res) => {
